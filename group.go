@@ -3,6 +3,8 @@ package jira_client2
 import (
 	"fmt"
 	"net/http"
+	//"io/ioutil"
+	//"encoding/json"
 )
 
 // GroupOptions specifies the optional parameters to various List methods that
@@ -57,41 +59,46 @@ type GroupMember struct {
 	TimeZone     string `json:"timeZone,omitempty"`
 }
 type Groups struct {
-	Name         string `json:"name,omitempty" structs:"name,omitempty"`
-	Html         string `json:"html,omitempty" structs:"html,omitempty"`
-	labels       []string `json:"labels,omitempty"  structs:"labels,omitempty`
+	Name   string   `json:"name,omitempty" structs:"name,omitempty"`
+	Html   string   `json:"html,omitempty" structs:"html,omitempty"`
+	labels []string `json:"labels,omitempty"  structs:"labels,omitempty`
 }
 
 type GroupResp struct {
-	Self         string `json:"self,omitempty"`
-	Name         string `json:"name,omitempty"`
-	Expand       string `json:"expand,omitempty"`
-	Users        string `json:"users,omitempty" structs:"users,omitempty"`
+	Self   string `json:"self,omitempty"`
+	Name   string `json:"name,omitempty"`
+	Expand string `json:"expand,omitempty"`
+	Users  string `json:"users,omitempty" structs:"users,omitempty"`
 }
 
 type GroupsType2 struct {
-	Header 	   string        `json:"header,omitempty" structs:"header,omitempty"`
-	Total      int           `json:"total,omitempty" structs:"total,omitempty"`
-	Groups     []Groups      `json:"groups,omitempty"  structs:"groups,omitempty`
+	Header string   `json:"header,omitempty" structs:"header,omitempty"`
+	Total  int      `json:"total,omitempty" structs:"total,omitempty"`
+	Groups []Groups `json:"groups,omitempty"  structs:"groups,omitempty`
 }
 
-
 type AddJIRAGroupsResponseType struct {
-	Name      string `json:"name,omitempty" structs:"name,omitempty"`
-	Self      string `json:"self,omitempty" structs:"self,omitempty"`
-	Users     string `json:"users,omitempty"  structs:"users,omitempty`
-	Expand    string `json:"expand,omitempty" structs:"expand,omitempty"`
+	Name   string `json:"name,omitempty" structs:"name,omitempty"`
+	Self   string `json:"self,omitempty" structs:"self,omitempty"`
+	Users  string `json:"users,omitempty"  structs:"users,omitempty`
+	Expand string `json:"expand,omitempty" structs:"expand,omitempty"`
 }
 
 type AddJIRAUsersType struct {
-	Name      string `json:"name,omitempty"  structs:"name,omitempty`
+	Name string `json:"name,omitempty"  structs:"name,omitempty`
 }
 
+type GetJIRAGroupMemberResponseType struct {
+	Self       string        `json:"self,omitempty" structs:"self,omitempty"`
+	Next       string        `json:"nextPage,omitempty" structs:"nextPage,omitempty"`
+	StartAt    int           `json:"startAt",omitempty" structs:"next,omitempty"`
+	MaxResults int           `json:"maxResults",omitempty" structs:"next,omitempty"`
+	Total      int           `json:"total",omitempty" structs:"next,omitempty"`
+	Islast     bool          `json:"isLast",omitempty" structs:"isLast,omitempty"`
+	Values     []GroupMember `json:"values",omitempty" structs:"values,omitempty"`
+}
 
-
-
-
-func  (c *JIRAClient) AddGroupMembers(groupname string, member string ) (*AddJIRAGroupsResponseType, *http.Response) {
+func (c *JIRAClient) AddGroupMembers(groupname string, member string) (*AddJIRAGroupsResponseType, *http.Response) {
 	var u string
 	u = fmt.Sprintf("/rest/api/2/group/user?groupname=%s", groupname)
 
@@ -99,39 +106,34 @@ func  (c *JIRAClient) AddGroupMembers(groupname string, member string ) (*AddJIR
 	payload.Name = member
 
 	response := new(AddJIRAGroupsResponseType)
-	_, res2  := c.doRequest("POST", u , payload, &response)
+	_, res2 := c.doRequest("POST", u, payload, &response)
 
-//	fmt.Println("res: " + string(res))
+	//	fmt.Println("res: " + string(res))
+
+	return response, res2
+}
+
+func (c *JIRAClient) GetGroupMembers(name string, opt *GroupOptions) (*GetJIRAGroupMemberResponseType, *http.Response) {
+	var u string
+	if opt == nil {
+		u = fmt.Sprintf("/rest/api/2/group/member?groupname=%s", name)
+	} else {
+		u = fmt.Sprintf("/rest/api/2/group/member?groupname=%s&startAt=%d&maxResults=%d", name, opt.StartAt, opt.MaxResults)
+	}
+	//apiEndpoint := u
+
+	//var payload = new(AddJIRAUsersType)
+	//payload.Name = member
+
+	response := new(GetJIRAGroupMemberResponseType)
+	_, res2 := c.doRequest("GET", u, nil, &response)
+
+	//	fmt.Println("res: " + string(res))
 
 	return response, res2
 }
 
 /*
-
-
-func (s *GroupService) GetGroups(opt *GroupOptions) (*GroupsType2, *Response, error) {
-	var u string
-	if opt == nil {
-		u = fmt.Sprintf("rest/api/2/groups/picker")
-	} else {
-		u = fmt.Sprintf("rest/api/2/groups/picker?startAt=%d&maxResults=%d", opt.StartAt, opt.MaxResults)
-	}
-	apiEndpoint := u
-	//url, err := addOptions(apiEndpoint, opt)
-	req, err := s.client.NewRequest("GET", apiEndpoint, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	groups := new(GroupsType2)
-	resp, err := s.client.Do(req, groups)
-	if err != nil {
-		jerr := NewJiraError(resp, err)
-		return nil, resp, jerr
-	}
-
-	return groups, resp, err
-}
 
 func (s *GroupService) GetGroups2(options *GroupOptions) (*GroupsType2, *Response, error, int) {
 	var u string
