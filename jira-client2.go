@@ -82,7 +82,9 @@ func (c *JIRAClient) doRequest(method, url string, content, responseContainer in
 		log.Fatal(err)
 	}
 	if response.StatusCode < 200 || response.StatusCode > 300 {
-		log.Println("Bad response code received from server: ", response.Status)
+		if c.debug {
+			log.Println("Bad response code received from server: ", response.Status)
+		}
 	} else {
 		json.Unmarshal(contents, responseContainer)
 	}

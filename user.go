@@ -67,9 +67,9 @@ func  (c *JIRAClient) UserSearch(username string) (*[]User, *http.Response) {
 	//payload := nil
 
 	response := new([]User)
-	res, res2  := c.doRequest("GET", u , nil, &response)
+	_, res2  := c.doRequest("GET", u , nil, &response)
 
-	fmt.Println("res: " + string(res))
+//	fmt.Println("res: " + string(res))
 
 	return response, res2
 }
@@ -77,12 +77,10 @@ func  (c *JIRAClient) UserSearch(username string) (*[]User, *http.Response) {
 func  (c *JIRAClient) UserGet(username string) (*User, *http.Response) {
 	u := fmt.Sprintf("/rest/api/2/user?username=%s", username)
 
-	//payload := nil
-
 	response := new(User)
-	res, res2  := c.doRequest("GET", u , nil, &response)
+	_, res2  := c.doRequest("GET", u , nil, &response)
 
-	fmt.Println("res: " + string(res))
+	//fmt.Println("res: " + string(res))
 
 	return response, res2
 }
@@ -90,12 +88,10 @@ func  (c *JIRAClient) UserGet(username string) (*User, *http.Response) {
 func  (c *JIRAClient) UserCreate(user *User) (*User, *http.Response) {
 	u := fmt.Sprintf("/rest/api/2/user")
 
-	//payload := nil
-
 	response := new(User)
-	res, res2  := c.doRequest("POST", u , user, &response)
+	_, res2  := c.doRequest("POST", u , user, &response)
 
-	fmt.Println("res: " + string(res))
+//	fmt.Println("res: " + string(res))
 
 	return response, res2
 }

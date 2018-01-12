@@ -99,9 +99,9 @@ func  (c *JIRAClient) AddGroupMembers(groupname string, member string ) (*AddJIR
 	payload.Name = member
 
 	response := new(AddJIRAGroupsResponseType)
-	res, res2  := c.doRequest("POST", u , payload, &response)
+	_, res2  := c.doRequest("POST", u , payload, &response)
 
-	fmt.Println("res: " + string(res))
+//	fmt.Println("res: " + string(res))
 
 	return response, res2
 }
