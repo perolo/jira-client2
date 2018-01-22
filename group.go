@@ -98,7 +98,7 @@ type GetJIRAGroupMemberResponseType struct {
 	Values     []GroupMember `json:"values",omitempty" structs:"values,omitempty"`
 }
 
-func (c *JIRAClient) AddGroupMembers(groupname string, member string) (*AddJIRAGroupsResponseType, *http.Response) {
+func (c *JIRAClient) AddGroupMember(groupname string, member string) (*AddJIRAGroupsResponseType, *http.Response) {
 	var u string
 	u = fmt.Sprintf("/rest/api/2/group/user?groupname=%s", groupname)
 
