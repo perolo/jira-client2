@@ -164,7 +164,7 @@ func (s *GroupService) GetGroups2(options *GroupOptions) (*GroupsType2, *Respons
 // User of this resource is required to have sysadmin or admin permissions.
 //
 // JIRA API docs: https://docs.atlassian.com/jira/REST/server/#api/2/group-getUsersFromGroup
-func (s *GroupService) Get1(name string, options *GroupOptions) ([]GroupMember, *Response, error, int) {
+func (s *GroupService) GetUsersFromGroup(name string, options *GroupOptions) ([]GroupMember, *Response, error, int) {
 	var u string
 	if options == nil {
 		u = fmt.Sprintf("rest/api/2/group/member?groupname=%s", name)
