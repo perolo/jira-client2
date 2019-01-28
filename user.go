@@ -35,6 +35,15 @@ type User struct {
 	Expand          string     `json:"expand,omitempty" structs:"lokale,omitempty"`
 }
 
+type CreateUser struct {
+	Self            string     `json:"self,omitempty" structs:"self,omitempty"`
+	Name            string     `json:"name,omitempty" structs:"name,omitempty"`
+	Password        string     `json:"password,omitempty" structs:"password,omitempty"`
+	EmailAddress    string     `json:"emailAddress,omitempty" structs:"emailAddress,omitempty"`
+	DisplayName     string     `json:"displayName,omitempty" structs:"displayName,omitempty"`
+	ApplicationKeys []string   `json:"applicationKeys,omitempty" structs:"applicationKeys,omitempty"`
+}
+
 // UserGroup represents the group list
 type UserGroup struct {
 	Self string `json:"self,omitempty" structs:"self,omitempty"`
@@ -85,7 +94,7 @@ func  (c *JIRAClient) UserGet(username string) (*User, *http.Response) {
 	return response, res2
 }
 
-func  (c *JIRAClient) UserCreate(user *User) (*User, *http.Response) {
+func  (c *JIRAClient) UserCreate(user *CreateUser) (*User, *http.Response) {
 	u := fmt.Sprintf("/rest/api/2/user")
 
 	response := new(User)
