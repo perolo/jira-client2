@@ -56,7 +56,7 @@ func (c *JIRAClient) doRequest(method, url string, content, responseContainer in
 	furl := c.baseURL + url
 	if c.debug {
 		log.Println("Full URL", furl)
-		log.Println("JSON Content:", b.String())
+		//log.Println("JSON Content:", b.String())
 	}
 	request, err := http.NewRequest(method, furl, b)
 	request.SetBasicAuth(c.username, c.password)
